@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+if [ "$1" != "" ] && [ "$1" = "-h" ]; then
+    echo "Shipyard中文版 部署环境变量:"
+    echo "  ACTION: 这个命令可以使用的指令包括(deploy, upgrade, node, remove)"
+    echo "  DISCOVERY: discovery system used by Swarm (only if using 'node' action)"
+    echo "  IMAGE: this overrides the default Shipyard image"
+    echo "  PREFIX: prefix for container names"
+    echo "  SHIPYARD_ARGS: these are passed to the Shipyard controller container as controller args"
+    echo "  TLS_CERT_PATH: path to certs to enable TLS for Shipyard"
+    echo "  PORT: specify the listen port for the controller (default: 8080)"
+    echo "  PROXY_PORT: port to run docker proxy (default: 2375)"
+    exit 1
+fi
+
+if [ -z "`which docker`" ]; then
+    echo "You must have the Docker CLI installed on your \$PATH"
+    echo "  See http://docs.docker.com for details"
+    exit 1
+fi
+
+
+ACTION=${ACTION:-deploy} #操作指令
+PREFIX=${PREFIX:-shipyard} #容器名前缀
+
+# 数据库启动脚本
+start_rethinkdb() {
+    ID=$(docker run \
+        -ti \
+        -d \
+        --restart=always \
+        --name $PREFIX-rethinkdb \
+        rethinkdb)
+}
+
+
+if [ "$ACTION" = "deploy" ]; then
+
+  echo "开始部署 Shipyard"
+  echo " -> 启动数据库程序"
+  start_rethinkdb
+
+
+else
+    echo "Unknown action $ACTION"
+    exit 1
+fi
