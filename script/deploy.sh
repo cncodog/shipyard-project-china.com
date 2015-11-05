@@ -17,17 +17,32 @@ fi
 
 if [ -z "`which docker`" ]; then
     echo "You must have the Docker CLI installed on your \$PATH"
-    echo "  See http://docs.docker.com for details"
+    echo "  See http://docs.dockerclub.net for details"
     exit 1
 fi
 
 
+##应用参数
 ACTION=${ACTION:-deploy}
+PREFIX=${PREFIX:-shipyard-china}
+
+start_rethinkdb() {
+    ID=$(docker run \
+        -ti \
+        -d \
+        --restart=always \
+        --name $PREFIX-rethinkdb \
+        rethinkdb)
+}
 
 
-if [ "$ACTION" = "deploy" ]; then
+if [ "$ACTION" = "all" ]; then
     set -e
     echo "Deploying Shipyard"
     echo " -> Starting Database"
-
+##部署数据库
+elif [ "$ACTION" = "rethinkdb" ]; then
+     echo "Deploying RethinkDB"
+     echo " -> Starting Database"
+   start_rethinkdb
 fi
