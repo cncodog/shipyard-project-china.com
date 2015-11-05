@@ -20,3 +20,14 @@ if [ -z "`which docker`" ]; then
     echo "  See http://docs.docker.com for details"
     exit 1
 fi
+
+
+ACTION=${ACTION:-deploy}
+
+
+if [ "$ACTION" = "deploy" ]; then
+    set -e
+    echo "Deploying Shipyard"
+    echo " -> Starting Database"
+
+fi
