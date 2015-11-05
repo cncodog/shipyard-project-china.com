@@ -1,0 +1,4 @@
+*.swp
+app/app
+public/*
+server
